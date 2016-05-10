@@ -58,5 +58,17 @@ Open your sources.list file with the text editor of your choice. You can use vi 
 
 Once you open it, add deb http://download.proxmox.com/debian jessie pve-no-subscription at the bottom. It's probably a good idea to leave a comment to note why you did this, but you don't have to. Your file should look something like this in the end.
 
+Newbies: If you're using nano, press CTRL+X, Y for yes, and ENTER to save and exit.
+
+You also need to remove the subscription-only repository from your APT sources. It's stored in it's own file, so go ahead and delete it by running rm /etc/apt/sources.list.d/pve-enterprise.list.
+
+Once that's done, run apt-get update, then apt-get upgrade -y, and finally update-grub just in case. This will download all the updates you need, so it may take a while depending on your internet speed.
+Making ZFS partitions on your SSD
+
+We're going to use the handy command-line utility cfdisk to partition out the free space we made into ZFS log/cache partitions. You should have already chosen the size of these partitions; for this guide I am opting for an 8GB log partition and a 32GB cache partition.
+
+Still logged in as root, run cfdisk /dev/sda. If you find cfdisk is not installed, you can install it with apt-get install cfdisk.
+
+You can see the free space we made earlier highlighted in purple. The text-based UI is pretty self-explanatory, so go ahead and make the partitions you need. You can see below how I did mine from start to finish.
 
 
