@@ -7,41 +7,67 @@ Dell PowerEdge T605 Server
 * 32 GB RAM ECC REGISTERED
 * 1x 256GB Western Digital SATA   
 * 2x 2TB Western Digital RED SATA
-* 1x 120GB SSD PCIe Plextor 120 GB
+* 1x 120GB SSD SATA Kingston 111 GB
 * 1x SAS 6i/R controlador interno RAID PCI-E
 * 4x NIC Gigabit Ethernet
 
 ## Instalación de Proxmox
-Note: When I installed Proxmox, I could not get the "leave x amount of free space" option to work. I tried...with 6 reinstall attempts. Consequently, in this guide, we'll be installing the base system with smaller-than-needed LVM volumes, then using an Ubuntu live CD with gparted to shrink the LVM group's partition down to size. It's weird, but it got the job done.
+Nota: Al instalar Proxmox, no se puede dejar la cantidad de espacio libre que queramos. Consecuentemente, en esta guía instalaremos el sistema base con unos LVM más pequeños de los necesarios y a continuación usaremos un LiveCD para encoger el tamaño de la partición del grupo de LVM
 
-120GB Plextor SSD - Base OS install on EXT4 partition + 8GB ZFS log partition (ZIL) + 32GB ZFS cache partition (L2ARC)
+111GB Kingston SATA SSD - Sistema Base instalado en un partición ext4 + 8GB partición de log ZFS (ZIL) + 32GB partición caché ZFS (L2ARC)
+
+        8GB  partición de Log.
+        32GB partición caché ZFS.
+        32GB / partición root
+        16GB Partición Linux swap (ver nota debajo)
+        32GB partición pve-data 
+
+Este enfoque parece funcionar bastante bien, ¡pero asegurate de inicializar el valor de *vm.swappiness* a un valor bajo si tienes la partición de swap en un SSD! Incrementará el uso de la RAM un poco, pero es más facil tenerlo en el SSD y hace que la máquina vaya un poco más rápida. Normalmente el valor es 60, lo cual indica que cuando la RAM se llena al 60%, se empieza a paginar con el SSD. Podemos averiguar el valor actual con la orden:
+
+```bash
+    cat /proc/sys/vm/swappiness
+```
+
+Para cambiar el valor, debemos editar el fichero */etc/sysctl.conf* y añadir la línea:
+
+```bash
+    vm.swappiness = 10
+```
+
+Hay cinco opciones para inicializar el almacenamiento durante la instalación de Proxmox: 
+
+    swapsize : tamaño de la swap de Linux.
+    maxroot : Este es el tamaño de la partición / (root).
+    minfree : Debería ser tu tamaño de log ZFS + cache ZFS. En mi disco SSD de 111GB, éste era 32+8=40.
+    maxvz : Ésta es la partición pve-data al la que me refería arriba. 
+    Filesystem : Déjalo en ext4 a menos que tengas una buena razón para no hacerlo.
+
+![](imagenes/instalacion1.png)
 
 
+Una vez hecho lo anterior, configura una contraseña y una zona horaria, y después configura la red. Debes asignar una IP fija que no debs cambiar por un largo periodo de tiempo, es bastante enredoso cambiar la IP. El FQDN no tiene que ser un nombre real (existente) en internet. Si no sabes cual poner, *servidor1.localdomain* será suficiente.
 
-        8GB ZFS Log partition : 8GB should be fine.
-        32GB ZFS cache partition : if you have a 256GB SSD, try 64GB of cache.
-        32GB / root partition
-        16GB Linux swap partition (see disclaimer below)
-        32GB pve-data partition
-This layout seems to work pretty good for my needs, but be sure to set vm.swappiness to a low value if you have your swap file on an SSD! It'll increase RAM usage a bit, but it's easier on your SSD and makes your machine a little jumpier. This step is included in this guide later on.
+![](imagenes/instalacion2.png)
 
-There are 5 key options in the Proxmox storage setup:
+Una vez finalizada la instalación, ya podemos reiniciar, pero antes de esto, necesitamos encoger la partición de los LVM
 
-    swapsize : Linux swap file size.
-    maxroot : This is the size of the / (root) partition
-    minfree : This should be your ZFS log + your ZFS cache size. In my 120GB SSD, this was 32+8=40.
-    maxvz : This is the pve-data partition I refer to above. I wouldn't make this too big unless you know what you're doing.
-    Filesystem : Leave this on ext4 unless you have a good reason not to.
+![](imagenes/instalacion3.png)
 
-Once you get done with this, configure a password and your timezone, and then you get to network settings. Set this to something that'll work long term; it's a total pain to change the IP. The FDQN does not have to be an actual domain name on the internet, so if you don't know, just say whateveryouwant.localdomain and you'll be okay.
+## Reparando el particionamiento del SSD 
 
-Once this is done, it'll do some stuff and then drop you at this screen. Once you get here, you're done with the install! Go ahead and click reboot, but don't let it actually boot into the new Proxmox install yet.
+Usando un LiveCD, inicia gparted y cambia el tamaño de la partición del LVM
 
-Fixing the SSD partitioning
+En las siguientes imágenes se muestra la secuencia de pasos:
 
-We're going to use an Ubuntu Live CD with GParted to create free space on the SSD. I used Ubuntu GNOME for this guide, but you can use any Linux live CD with a partitioning tool. Just download the ISO and boot from it.
+![](imagenes/gparted1.png)
 
-Configure your new Proxmox install
+![](imagenes/gparted2.png)
+
+![](imagenes/gparted3.png)
+
+![](imagenes/gparted4.png)
+
+## Configura la nueva instalación de Proxmox
 
 Go ahead and boot back into Proxmox, but don't plug in your mechanical drives yet, only have the SSD hooked up.
 
