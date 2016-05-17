@@ -61,6 +61,8 @@ En las siguientes imágenes se muestra la secuencia de pasos:
 
 ![](imagenes/gparted1.png)
 
+(8GB Log ZFS + 32 GB Cache ZFS) = 40 * 1024 = 40960, por tanto encogeremos la partición 40960MB.
+
 ![](imagenes/gparted2.png)
 
 ![](imagenes/gparted3.png)
