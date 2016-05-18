@@ -153,44 +153,48 @@ Vamos a tener 4 volúmenes de almacenamiento en esta instalación de Proxmox, ad
         **zfs-backups:** Almacena backups de las máquinas virtuales
         **zfs-templates:** Almacena ISOs y templates de contenedores. Esto es opcional y podría haberse dejado en local en el SSD, dado que las ISOs y las templates LXC no son datos irremplazables.
 
-Once you've logged in, go to Datacenter > Storage, and click Add > ZFS (in the top left) as shown below.
+Una vez hemos entrado en el interfaz web, vamos a Datacenter > Storage, hacemos click en Add > ZFS (arriba a la izquierda) tal como se muestra debajo.
 
 ![](imagenes/interfazWeb2.png)
 
-It is very important to choose only "Containers" under "Content." The rest of your settings should look like this, and are pretty straightforward.
+Es muy importante elegir "Containers" dentro de "Content." El resto de la configuración deberían parecerse a esto, y son bastante claros.
 
 ![](imagenes/contenedores-zfs.png)
 
-Add another ZFS volume, call it vm-disks, and only allow "Disk Images" under "Content" this time. Also be sure to check "Thin provision." Your settings should look like this.
+Añade otro volumen ZFS, llamalo *vm-disks*, y esta vez solo permite "Disk Images" dentro de  "Content". También asegurate de marcar la opción "Thin provision." Tu configuración debería parecerse a esta. 
 
 ![](imagenes/vm-disks.png)
 
-Now we've got our container storage and VM storage. The Proxmox ZFS plugin will only allow storing disk images and containers, so we're going to add a normal directory for the backups and ISO storage volumes. We know the mount point of the ZFS array (/rpool) so it's an easy workaround.
+Ahora ya disponemos del lamacenamiento de contenedores y de máquinas virtuales. El plugin ZFS de Proxmox solo permitirá almacenar imágenes y contenedores, por tanto vamos a añadir un directorio normal para los backups y los volúmenes de almacenamiento ISO. Sabemos que el punto de montaje del array ZFS (/rpool) por tanto es sencillo.  
 
-Click "Add" again, only this time choose "Directory" instead of "ZFS."
+Pulsa "Add" de nuevo, escoge "Directory" solo esta vez en lugar de "ZFS."
 
-For zfs-templates , I recommend allowing both container templates and ISO images. This gives you a single, easy place to store the tools to create containers and KVM virtual machines. Make sure for the directory you use the correct mount point! It will be /whatever-your-pool-name-was-that-you-set-earlier.
+Para las *zfs-templates*, es recomendable permitir tanto templates de contenedores como imágenes ISO. Esto nos da un único sitio fácil para almacenar las herramientas para crear contenedores y máquinas virtuales KVM.
+¡Asegurate de usar el correcto punto de montaje para el directorio! Será del tipo /nombre-del-pool-iniciado-antes. 
 
 ![](imagenes/zfs-templates.png)
 
-You can do almost the same thing for zfs-backups, just name it something different and allow only VZDump backup files, like so:
+Puedes hacer casi lo mismo para zfs-backups, únicamente nombralo de forma diferente y permite solo ficheros del tipo VZDump backup, como se muestra en la imagen:
 
 ![](imagenes/zfs-backups.png)
 
-Once you're done, you should have 5 storage volumes counting the built-in local, which is on the SSD. I chose to disable local so I don't accidentally put things there, and you can do that by selecting it in the list of storage volumes, clicking "Edit" and unchecking "Enable".
+Una vez finalizado, deberían haber 5 volúmenes de almacenamiento contando el volúmen *local*, que está en el SSD.
+Es una buena idea deshabilitarlo para no poner cosas accedentamente ahí, para ello seleccionalo en la lista de volúmenes de almacenamiento, haz click en "Edit" y quita la marca de "Enable".
 
 ![](imagenes/local.png)
 
 ![](imagenes/local-lvm.png)
 
-
-Now if you expand the node dropdown to the far left, you should see something like this.
+Ahora, si expandimos el nodo de la izquierda, debería aparecer algo como esto:
 
 ![](imagenes/server-view.png)
 
-If you see all the volumes you wanted, you've done it correctly. Good job! You can click on them to view disk usage info, set permissions, and view content if you'd like. You can also upload content, so if you have ISOs that's how you upload them.
+Si aparecen todos los volúmenes que querías, es que lo has realizado correctamente. ¡Buen trabajo! Puedes hacer click en allos para ver la información del uso de disco, configurar permisos y ver el contenido. También puedes subir contenido.
 
-Congratulations! Your Proxmox+ZFS machine is ready to go. With the storage configuration I outlined, there is only one possible storage volume for each possible content type, so there's no way to accidentally put something in the wrong spot. You can create containers and VMs as normal now, and follow the Proxmox docs for migrating your backed up VMs over. More to come on this tutorial!
+¡Enhorabuena! Tu máquina con Proxmox+ZFS está preparada para funcionar. COn la configuración de almacenamiento mostrada en esta guía, hay un único volumen de almacenamiento para cada tipo de contenido, por tanto no hay forma de poner algo en el lugar incorrecto accidentalmente. 
+¡Ahora puedes crear de forma normal contenedores y máquinas virtuales.!
+
+
 
 
 
