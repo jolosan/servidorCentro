@@ -141,6 +141,7 @@ Para obtener un rendimiento óptimo completo de máquinas virtuales (KVM), tenem
 Puedes leer más sobre lo que es necesario en la wiki de Proxmox. [https://pve.proxmox.com/wiki/Storage:_ZFS#Adding_ZFS_root_file-system_as_storage_with_Plugin]
 
 ### 2.4. Añadir ZFS al sistema de almacenamiento de Proxmox
+
 Hemos creado un pool ZFS , y podemos guardar cosas en él , pero ahora tenemos que decir a la interfaz web Proxmox donde está. Abre *https://IP_maquina:8006* en un navegador web, asegurándote de utilizar HTTPS.
 ![](imagenes/interfazWeb1.png)
 
@@ -148,10 +149,10 @@ Hemos creado un pool ZFS , y podemos guardar cosas en él , pero ahora tenemos q
     
 Vamos a tener 4 volúmenes de almacenamiento en esta instalación de Proxmox, además del volumen local por defecto, que en este caso será en el SSD:
 
-        **contenedores-zfs:** Almacena sistemas de ficheros LXC 
-        **vm-disks:** Amacena imágenes de disco RAW de una forma más eficiente que cualquier otra. Leer más aquí [https://pve.proxmox.com/wiki/Storage:_ZFS#Adding_ZFS_root_file-system_as_storage_with_Plugin]
-        **zfs-backups:** Almacena backups de las máquinas virtuales
-        **zfs-templates:** Almacena ISOs y templates de contenedores. Esto es opcional y podría haberse dejado en local en el SSD, dado que las ISOs y las templates LXC no son datos irremplazables.
+**contenedores-zfs:** Almacena sistemas de ficheros LXC 
+**vm-disks:** Amacena imágenes de disco RAW de una forma más eficiente que cualquier otra. Leer más aquí [https://pve.proxmox.com/wiki/Storage:_ZFS#Adding_ZFS_root_file-system_as_storage_with_Plugin]
+**zfs-backups:** Almacena backups de las máquinas virtuales
+**zfs-templates:** Almacena ISOs y templates de contenedores. Esto es opcional y podría haberse dejado en local en el SSD, dado que las ISOs y las templates LXC no son datos irremplazables.
 
 Una vez hemos entrado en el interfaz web, vamos a Datacenter > Storage, hacemos click en Add > ZFS (arriba a la izquierda) tal como se muestra debajo.
 
@@ -192,6 +193,7 @@ Ahora, si expandimos el nodo de la izquierda, debería aparecer algo como esto:
 Si aparecen todos los volúmenes que querías, es que lo has realizado correctamente. ¡Buen trabajo! Puedes hacer click en allos para ver la información del uso de disco, configurar permisos y ver el contenido. También puedes subir contenido.
 
 ¡Enhorabuena! Tu máquina con Proxmox+ZFS está preparada para funcionar. COn la configuración de almacenamiento mostrada en esta guía, hay un único volumen de almacenamiento para cada tipo de contenido, por tanto no hay forma de poner algo en el lugar incorrecto accidentalmente. 
+
 ¡Ahora puedes crear de forma normal contenedores y máquinas virtuales.!
 
 
