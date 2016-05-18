@@ -179,6 +179,9 @@ Once you're done, you should have 5 storage volumes counting the built-in local,
 
 ![](imagenes/local.png)
 
+![](imagenes/local-lvm.png)
+
+
 Now if you expand the node dropdown to the far left, you should see something like this.
 
 ![](imagenes/server-view.png)
