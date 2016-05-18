@@ -5,7 +5,6 @@
 Dell PowerEdge T605 Server
 * 2x AMD Quad Core Opteron 2376 (2,3GHz, 6MB, 75W ACP)
 * 32 GB RAM ECC REGISTERED
-* 1x 256GB Western Digital SATA   
 * 2x 2TB Western Digital RED SATA
 * 1x 120GB SSD SATA Kingston 111 GB
 * 1x SAS 6i/R controlador interno RAID PCI-E
@@ -104,7 +103,7 @@ Ejecuta *cfdisk /dev/sda*.
 
 Se puede ver el espacio libre que hicimos antes resaltado en color morado . La interfaz de usuario basada en texto es bastante explicativa por sí misma , así que adelante y hacer las particiones que necesitamos. Se puede ver a continuación cómo lo hice mío de principio a fin.
 
-![](imagenes/cfdisk.png)
+![](imagenes/cfdisk.gif)
 
 Vamos a crear un RAID1 (mirror) con los dos discos de 2TB.
 
@@ -147,10 +146,10 @@ Disposición del almacenamiento
     
 Vamos a tener 4 volúmenes de almacenamiento en esta instalación de Proxmox, además del volumen local por defecto, que en este caso será en el SSD:
 
-        zfs-containers : Stores LXC container filesystems
-        vm-disks : Stores RAW disk images in a more efficient way than they would otherwise be stored. Read more here.25
-        zfs-backups : Stores backups of virtual machines
-        zfs-templates : Stores ISOs and container templates. This is optional and could be left in local on your SSD if you would rather, since ISOs and LXC templates are not irreplaceable data.
+        contenedores-zfs : Almacena sistemas de ficheros LXC 
+        vm-disks : Amacena imágenes de disco RAW de una forma más eficiente que cualquier otra. Leer más aquí [https://pve.proxmox.com/wiki/Storage:_ZFS#Adding_ZFS_root_file-system_as_storage_with_Plugin]
+        zfs-backups : Almacena backups de las máquinas virtuales
+        zfs-templates : Almacena ISOs y templates de contenedores. Esto es opcional y podría haberse dejado en local en el SSD, dado que las ISOs y las templates LXC no son datos irremplazables.
 
 Once you've logged in, go to Datacenter > Storage, and click Add > ZFS (in the top left) as shown below.
 ![](imagenes/interfazWeb2.png)
