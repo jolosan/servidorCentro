@@ -106,4 +106,52 @@ Se puede ver el espacio libre que hicimos antes resaltado en color morado . La i
 
 ![](imagenes/cfdisk.png)
 
+Vamos a crear un RAID1 (mirror) con los dos discos de 2TB.
+
+## Iniciando el pool ZFS
+Ejecutamos la orden *lsblk* para ver los discos que tenemos conectados.
+![](imagenes/lsblk0.png)
+
+### Creando un nuevo pool ZFS
+Para este sistema , quiero un pool raid1  con una caché L2ARC y un Log ZIL .
+
+Sabemos de arriba que las 2 unidades mecánicas son sdb y sdc. También sabemos que mi registro es sda4 , y mi memoria caché es sda5 . Al crear el pool ZFS , tenemos que añadir /dev/ al principio de cada nombre de dispositivo . En Linux , /dev es el directorio en representación de todos los dispositivos del sistema.
+
+Para crear el pool , ejecutaremos este comando :
+```bash
+   zpool create -f -o ashift=12 rpool mirror /dev/sdb /dev/sdc cache /dev/sda5 log /dev/sda4
+```
+![](imagenes/lsblk1.png)
+
+Una vez hecho esto , puede ejecutar *zpool list* para verificar que el pool se ha creado. Ten en cuenta que el tamaño que se muestra aquí es el tamaño real total de los discos, no el espacio real utilizable.
+```bash
+   zpool list
+   NAME    SIZE  ALLOC   FREE  EXPANDSZ   FRAG    CAP  DEDUP  HEALTH  ALTROOT
+   rpool  1.81T   492K  1.81T         -     0%     0%  1.00x  ONLINE  -
+
+```
+### Creando un  sub-pool para las imágenes RAW  de las VM
+Para obtener un rendimiento óptimo completo de máquinas virtuales (KVM), tenemos que crear un sub-bloque especial . No hay ningún requisito de hardware adicional para esto. Basta con ejecutar :
+
+```bash
+   zfs create rpool/vm-disks
+```
+
+Puedes leer más sobre lo que es necesario en la wiki de Proxmox. [https://pve.proxmox.com/wiki/Storage:_ZFS#Adding_ZFS_root_file-system_as_storage_with_Plugin]
+
+### Añadir ZFS al sistema de almacenamiento de Proxmox
+Hemos creado un pool ZFS , y podemos guardar cosas en él , pero ahora tenemos que decir a la interfaz web Proxmox donde está. Abre https://IP_maquina:8006 en un navegador web, asegurándose de utilizar HTTPS .
+
+
+Disposición del almacenamiento
+    
+Vamos a tener 4 volúmenes de almacenamiento en esta instalación de Proxmox, además del volumen local por defecto, que en este caso será en el SSD:
+
+        zfs-containers : Stores LXC container filesystems
+        vm-disks : Stores RAW disk images in a more efficient way than they would otherwise be stored. Read more here.25
+        zfs-backups : Stores backups of virtual machines
+        zfs-templates : Stores ISOs and container templates. This is optional and could be left in local on your SSD if you would rather, since ISOs and LXC templates are not irreplaceable data.
+
+
+
 
