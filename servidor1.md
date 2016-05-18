@@ -19,7 +19,7 @@ Nota: Al instalar Proxmox, no se puede dejar la cantidad de espacio libre que qu
         32GB partición caché ZFS.
         32GB / partición root
         16GB Partición Linux swap (ver nota debajo)
-        32GB partición pve-data 
+        23GB partición pve-data 
 
 Este enfoque parece funcionar bastante bien, ¡pero asegurate de inicializar el valor de *vm.swappiness* a un valor bajo si tienes la partición de swap en un SSD! Incrementará el uso de la RAM un poco, pero es más facil tenerlo en el SSD y hace que la máquina vaya un poco más rápida. Normalmente el valor es 60, lo cual indica que cuando la RAM se llena al 60%, se empieza a paginar con el SSD. Podemos averiguar el valor actual con la orden:
 
@@ -139,40 +139,48 @@ Para obtener un rendimiento óptimo completo de máquinas virtuales (KVM), tenem
 Puedes leer más sobre lo que es necesario en la wiki de Proxmox. [https://pve.proxmox.com/wiki/Storage:_ZFS#Adding_ZFS_root_file-system_as_storage_with_Plugin]
 
 ### Añadir ZFS al sistema de almacenamiento de Proxmox
-Hemos creado un pool ZFS , y podemos guardar cosas en él , pero ahora tenemos que decir a la interfaz web Proxmox donde está. Abre https://IP_maquina:8006 en un navegador web, asegurándose de utilizar HTTPS .
+Hemos creado un pool ZFS , y podemos guardar cosas en él , pero ahora tenemos que decir a la interfaz web Proxmox donde está. Abre *https://IP_maquina:8006* en un navegador web, asegurándote de utilizar HTTPS.
 ![](imagenes/interfazWeb1.png)
 
-Disposición del almacenamiento
+### Disposición del almacenamiento
     
 Vamos a tener 4 volúmenes de almacenamiento en esta instalación de Proxmox, además del volumen local por defecto, que en este caso será en el SSD:
 
-        contenedores-zfs : Almacena sistemas de ficheros LXC 
-        vm-disks : Amacena imágenes de disco RAW de una forma más eficiente que cualquier otra. Leer más aquí [https://pve.proxmox.com/wiki/Storage:_ZFS#Adding_ZFS_root_file-system_as_storage_with_Plugin]
-        zfs-backups : Almacena backups de las máquinas virtuales
-        zfs-templates : Almacena ISOs y templates de contenedores. Esto es opcional y podría haberse dejado en local en el SSD, dado que las ISOs y las templates LXC no son datos irremplazables.
+        **contenedores-zfs:** Almacena sistemas de ficheros LXC 
+        **vm-disks:** Amacena imágenes de disco RAW de una forma más eficiente que cualquier otra. Leer más aquí [https://pve.proxmox.com/wiki/Storage:_ZFS#Adding_ZFS_root_file-system_as_storage_with_Plugin]
+        **zfs-backups:** Almacena backups de las máquinas virtuales
+        **zfs-templates:** Almacena ISOs y templates de contenedores. Esto es opcional y podría haberse dejado en local en el SSD, dado que las ISOs y las templates LXC no son datos irremplazables.
 
 Once you've logged in, go to Datacenter > Storage, and click Add > ZFS (in the top left) as shown below.
+
 ![](imagenes/interfazWeb2.png)
+
 It is very important to choose only "Containers" under "Content." The rest of your settings should look like this, and are pretty straightforward.
+
 ![](imagenes/contenedores-zfs.png)
 
 Add another ZFS volume, call it vm-disks, and only allow "Disk Images" under "Content" this time. Also be sure to check "Thin provision." Your settings should look like this.
+
 ![](imagenes/vm-disks.png)
 
-Now we've got our container storage and VM storage. The Proxmox ZFS plugin will only allow storing disk images and containers, so we're going to add a normal directory for the backups and ISO storage volumes. We know the mount point of the ZFS array (/my-zfs-pool) so it's an easy workaround.
+Now we've got our container storage and VM storage. The Proxmox ZFS plugin will only allow storing disk images and containers, so we're going to add a normal directory for the backups and ISO storage volumes. We know the mount point of the ZFS array (/rpool) so it's an easy workaround.
 
 Click "Add" again, only this time choose "Directory" instead of "ZFS."
 
 For zfs-templates , I recommend allowing both container templates and ISO images. This gives you a single, easy place to store the tools to create containers and KVM virtual machines. Make sure for the directory you use the correct mount point! It will be /whatever-your-pool-name-was-that-you-set-earlier.
+
 ![](imagenes/zfs-templates.png)
 
 You can do almost the same thing for zfs-backups, just name it something different and allow only VZDump backup files, like so:
+
 ![](imagenes/zfs-backups.png)
 
 Once you're done, you should have 5 storage volumes counting the built-in local, which is on the SSD. I chose to disable local so I don't accidentally put things there, and you can do that by selecting it in the list of storage volumes, clicking "Edit" and unchecking "Enable".
+
 ![](imagenes/local.png)
 
 Now if you expand the node dropdown to the far left, you should see something like this.
+
 ![](imagenes/server-view.png)
 
 If you see all the volumes you wanted, you've done it correctly. Good job! You can click on them to view disk usage info, set permissions, and view content if you'd like. You can also upload content, so if you have ISOs that's how you upload them.
