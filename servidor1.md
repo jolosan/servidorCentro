@@ -1,5 +1,7 @@
 # Instalando proxmox 4.x
 
+Nota: este trabajo está basado en el artículo [https://forum.teksyndicate.com/t/proxmox-zfs-with-ssd-caching-setup-guide/97663]
+
 ## Las características del servidor son:
 
 Dell PowerEdge T605 Server
