@@ -71,32 +71,39 @@ En las siguientes imágenes se muestra la secuencia de pasos:
 
 ## Configura la nueva instalación de Proxmox
 
-Go ahead and boot back into Proxmox, but don't plug in your mechanical drives yet, only have the SSD hooked up.
+Ahora ya podemos iniciar normalmente proxmox.
+Algo que hay que cambiar es añadir un parámetro al arranque de grub. Es el parámetro **rootdelay=10**. Para ello editaremos el archivo /etc/grub/default y añadiremos el parámetro al en la línea *GRUB_CMDLINE_LINUX_DEFAULT="rootdelay=10 quiet"* del fichero. Después habrá que ejecutar:
+```bash
+   sudo update-grub /dev/sda
+```
 
-Note: You can do everything from this point forward via SSH if you'd rather.
+Nota: Podemos realizar todo lo que viene a continuación desde una sesión SSH
 
-Once the machine boots, log in with root and the password you set during the install.
-Fixing Proxmox repositories
+## Cambiar los repositorios de Proxmox
+Proxmox está destinado para su uso en entornos de producción con la compra de una suscripción de la compañía . Si hemos adquirido una suscripción , debemos introducir nuestra clave a través de la interfaz web y omitir este paso.
 
-Proxmox is intended for use in production environments with the purchase of a subscription from the company. If you have purchased a subscription, you should enter your key through the web interface and skip this step.
+Abre el fichero /etc/apt/sources.list con tu editor de texto preferido y añade al final la línea *deb http://download.proxmox.com/debian jessie pve-no-subscription*.
 
-Note: Information on this step has been pulled from [the Proxmox documentation.](https://pve.proxmox.com/wiki/Packagerepositories#Proxmox_VE_No-Subscription_Repository) Feel free to read more about the repository system there._
+También debes eliminar el repositorio para suscriptores de los orígenes de APT. Es un fichero que puedes borrar con la orden : *rm /etc/apt/sources.list.d/pve-enterprise.list*
 
-Open your sources.list file with the text editor of your choice. You can use vi or vim, but if you're new to Linux you should use nano /etc/apt/sources.list.
+Una vez realizados los cambios, ejecuta las siguientes órdenes (una detrás de otra):
 
-Once you open it, add deb http://download.proxmox.com/debian jessie pve-no-subscription at the bottom. It's probably a good idea to leave a comment to note why you did this, but you don't have to. Your file should look something like this in the end.
+```bash
+   apt-get update
+   apt-get upgrade -y
+   update-grub
+```
 
-Newbies: If you're using nano, press CTRL+X, Y for yes, and ENTER to save and exit.
+Esto descargará todas las actualizaciones que necesita , lo que puede tardar un tiempo dependiendo de la conexión aInternet.
 
-You also need to remove the subscription-only repository from your APT sources. It's stored in it's own file, so go ahead and delete it by running rm /etc/apt/sources.list.d/pve-enterprise.list.
+## Realizar las particiones ZFS en el disco SSD
 
-Once that's done, run apt-get update, then apt-get upgrade -y, and finally update-grub just in case. This will download all the updates you need, so it may take a while depending on your internet speed.
-Making ZFS partitions on your SSD
+Vamos a utilizar la utilidad *cfdisk* de línea de comandos para dividir el espacio libre que hicimos en las particiones ZFS  de log y de cache. En nuestro caso estoy optando por una partición de Log de 8 GB y una partición de caché ZFS de 32 GB.
 
-We're going to use the handy command-line utility cfdisk to partition out the free space we made into ZFS log/cache partitions. You should have already chosen the size of these partitions; for this guide I am opting for an 8GB log partition and a 32GB cache partition.
+Ejecuta *cfdisk /dev/sda*. 
 
-Still logged in as root, run cfdisk /dev/sda. If you find cfdisk is not installed, you can install it with apt-get install cfdisk.
+Se puede ver el espacio libre que hicimos antes resaltado en color morado . La interfaz de usuario basada en texto es bastante explicativa por sí misma , así que adelante y hacer las particiones que necesitamos. Se puede ver a continuación cómo lo hice mío de principio a fin.
 
-You can see the free space we made earlier highlighted in purple. The text-based UI is pretty self-explanatory, so go ahead and make the partitions you need. You can see below how I did mine from start to finish.
+![](imagenes/cfdisk.png)
 
 
