@@ -149,9 +149,12 @@ Hemos creado un pool ZFS , y podemos guardar cosas en él , pero ahora tenemos q
     
 Vamos a tener 4 volúmenes de almacenamiento en esta instalación de Proxmox, además del volumen local por defecto, que en este caso será en el SSD:
 
-**contenedores-zfs:** Almacena sistemas de ficheros LXC 
-**vm-disks:** Amacena imágenes de disco RAW de una forma más eficiente que cualquier otra. Leer más aquí [https://pve.proxmox.com/wiki/Storage:_ZFS#Adding_ZFS_root_file-system_as_storage_with_Plugin]
-**zfs-backups:** Almacena backups de las máquinas virtuales
+**contenedores-zfs:** Almacena sistemas de ficheros LXC.
+
+**vm-disks:** Amacena imágenes de disco RAW de una forma más eficiente que cualquier otra. Leer más aquí [https://pve.proxmox.com/wiki/Storage:_ZFS#Adding_ZFS_root_file-system_as_storage_with_Plugin].
+
+**zfs-backups:** Almacena backups de las máquinas virtuales.
+
 **zfs-templates:** Almacena ISOs y templates de contenedores. Esto es opcional y podría haberse dejado en local en el SSD, dado que las ISOs y las templates LXC no son datos irremplazables.
 
 Una vez hemos entrado en el interfaz web, vamos a Datacenter > Storage, hacemos click en Add > ZFS (arriba a la izquierda) tal como se muestra debajo.
