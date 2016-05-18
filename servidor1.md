@@ -141,7 +141,7 @@ Puedes leer más sobre lo que es necesario en la wiki de Proxmox. [https://pve.p
 
 ### Añadir ZFS al sistema de almacenamiento de Proxmox
 Hemos creado un pool ZFS , y podemos guardar cosas en él , pero ahora tenemos que decir a la interfaz web Proxmox donde está. Abre https://IP_maquina:8006 en un navegador web, asegurándose de utilizar HTTPS .
-
+![](imagenes/interfazWeb1.png)
 
 Disposición del almacenamiento
     
@@ -152,6 +152,33 @@ Vamos a tener 4 volúmenes de almacenamiento en esta instalación de Proxmox, ad
         zfs-backups : Stores backups of virtual machines
         zfs-templates : Stores ISOs and container templates. This is optional and could be left in local on your SSD if you would rather, since ISOs and LXC templates are not irreplaceable data.
 
+Once you've logged in, go to Datacenter > Storage, and click Add > ZFS (in the top left) as shown below.
+![](imagenes/interfazWeb2.png)
+It is very important to choose only "Containers" under "Content." The rest of your settings should look like this, and are pretty straightforward.
+![](imagenes/contenedores-zfs.png)
+
+Add another ZFS volume, call it vm-disks, and only allow "Disk Images" under "Content" this time. Also be sure to check "Thin provision." Your settings should look like this.
+![](imagenes/vm-disks.png)
+
+Now we've got our container storage and VM storage. The Proxmox ZFS plugin will only allow storing disk images and containers, so we're going to add a normal directory for the backups and ISO storage volumes. We know the mount point of the ZFS array (/my-zfs-pool) so it's an easy workaround.
+
+Click "Add" again, only this time choose "Directory" instead of "ZFS."
+
+For zfs-templates , I recommend allowing both container templates and ISO images. This gives you a single, easy place to store the tools to create containers and KVM virtual machines. Make sure for the directory you use the correct mount point! It will be /whatever-your-pool-name-was-that-you-set-earlier.
+![](imagenes/zfs-templates.png)
+
+You can do almost the same thing for zfs-backups, just name it something different and allow only VZDump backup files, like so:
+![](imagenes/zfs-backups.png)
+
+Once you're done, you should have 5 storage volumes counting the built-in local, which is on the SSD. I chose to disable local so I don't accidentally put things there, and you can do that by selecting it in the list of storage volumes, clicking "Edit" and unchecking "Enable".
+![](imagenes/local.png)
+
+Now if you expand the node dropdown to the far left, you should see something like this.
+![](imagenes/server-view.png)
+
+If you see all the volumes you wanted, you've done it correctly. Good job! You can click on them to view disk usage info, set permissions, and view content if you'd like. You can also upload content, so if you have ISOs that's how you upload them.
+
+Congratulations! Your Proxmox+ZFS machine is ready to go. With the storage configuration I outlined, there is only one possible storage volume for each possible content type, so there's no way to accidentally put something in the wrong spot. You can create containers and VMs as normal now, and follow the Proxmox docs for migrating your backed up VMs over. More to come on this tutorial!
 
 
 
