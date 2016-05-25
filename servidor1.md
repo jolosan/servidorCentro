@@ -73,9 +73,9 @@ En las siguientes imágenes se muestra la secuencia de pasos:
 ## 2. Configuramos la nueva instalación de Proxmox
 
 Ahora ya podemos iniciar normalmente proxmox.
-Algo que hay que cambiar es añadir un parámetro al arranque de grub. Es el parámetro **rootdelay=10**. Para ello editaremos el archivo /etc/grub/default y añadiremos el parámetro al en la línea *GRUB_CMDLINE_LINUX_DEFAULT="rootdelay=10 quiet"* del fichero. Después habrá que ejecutar:
+Algo que hay que cambiar es añadir un parámetro al arranque de grub. Es el parámetro **rootdelay=10**. Para ello editaremos el archivo /etc/default/grub y añadiremos el parámetro al en la línea *GRUB_CMDLINE_LINUX_DEFAULT="rootdelay=10 quiet"* del fichero. Después habrá que ejecutar:
 ```bash
-   sudo update-grub /dev/sda
+   update-grub /dev/sda
 ```
 
 Nota: Podemos realizar todo lo que viene a continuación desde una sesión SSH
