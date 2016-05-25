@@ -203,6 +203,61 @@ Si aparecen todos los volúmenes que querías, es que lo has realizado correctam
 ¡Ahora puedes crear de forma normal contenedores y máquinas virtuales.!
 
 
+Para evitar el mensaje de la suscripción en el interfaz web:
+
+```bash
+   cp /usr/share/pve-manager/ext6/pvemanagerlib.js /usr/share/pve-manager/ext6/pvemanagerlib.js_BKP
+   vi /usr/share/pve-manager/ext6/pvemanagerlib.js
+   Sustituimos 
+       if (data.status !== 'Active')
+   por
+      // if (data.status !== 'Active') {
+         if (false){
+```
+
+Para poder añadir o sustituir discos al rpool:
+
+Autoexpandir:
+
+zpool set autoexpand=on rpool
+
+Reemplazar discos:
+
+zpool set autoreplace=on rpool
+
+para que las snapshots aparezcan al hacer zfs list
+
+zpool set listsnapshots=on rpool
+
+Activate Email notification
+to activate the daemon it is necessary to edit /etc/zfs/zed.d/zed.rc with your favored editor.
+
+Important: the only settings what is required is ZED_EMAIL the other are optional.
+
+After editing the zed.rc you have to restart the daemon.
+
+service zed restart
+
+Para limitar la memoria que usa ZFS:
+Memoria para ZFS
+
+/etc/modprobe.d/zfs.conf
+
+# 16GB=17179869184, 8GB=8589934592, 4GB=4294967296, 2GB=2147483648, 1GB=1073741824, 500MB=536870912, 250MB=268435456
+#1GB
+options zfs zfs_arc_max=1073741824
 
 
+PROXMOX RENDIMIENTO EN STORAGE TIPO ZFS
+Usan un dev zvol RAW. Por defecto el tamaño de bloque es de 4KB. Aumentar a 32 mejora. Editar /etc/pve/storage.cfg
+
+zfspool: rpool
+
+        pool rpool
+
+        blocksize 32k
+
+        content images
+
+        sparse
 
