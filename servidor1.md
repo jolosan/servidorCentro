@@ -136,6 +136,9 @@ Para obtener un rendimiento óptimo completo de máquinas virtuales (KVM), tenem
 
 ```bash
    zfs create rpool/vm-disks
+   zfs create rpool/contenedores
+   zfs create rpool/backups
+   zfs create rpool/templates
 ```
 
 Puedes leer más sobre lo que es necesario en la wiki de Proxmox. [https://pve.proxmox.com/wiki/Storage:_ZFS#Adding_ZFS_root_file-system_as_storage_with_Plugin]
@@ -195,7 +198,7 @@ Ahora, si expandimos el nodo de la izquierda, debería aparecer algo como esto:
 
 Si aparecen todos los volúmenes que querías, es que lo has realizado correctamente. ¡Buen trabajo! Puedes hacer click en allos para ver la información del uso de disco, configurar permisos y ver el contenido. También puedes subir contenido.
 
-¡Enhorabuena! Tu máquina con Proxmox+ZFS está preparada para funcionar. COn la configuración de almacenamiento mostrada en esta guía, hay un único volumen de almacenamiento para cada tipo de contenido, por tanto no hay forma de poner algo en el lugar incorrecto accidentalmente. 
+¡Enhorabuena! Tu máquina con Proxmox+ZFS está preparada para funcionar. Con la configuración de almacenamiento mostrada en esta guía, hay un único volumen de almacenamiento para cada tipo de contenido, por tanto no hay forma de poner algo en el lugar incorrecto accidentalmente. 
 
 ¡Ahora puedes crear de forma normal contenedores y máquinas virtuales.!
 
