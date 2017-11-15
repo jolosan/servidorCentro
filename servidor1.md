@@ -261,3 +261,28 @@ zfspool: rpool
 
         sparse
 
+
+Configuraciones adicionales:
+
+Tarjetas de red:
+
+
+Acceso SSH mediante clave pública:
+En la máquina cliente generamos el par de claves pública/privada:
+ssh-keygen -b 4096
+
+ssh-keygen generará dos archivos:
+
+id_rsa es la clave privada, la que permanecerá en la máquina local.
+id_rsa.pub es la clave pública, la que se tiene que copiar al servidor remoto al que se quiere acceder.
+COPIAR LA CLAVE PÚBLICA AL SERVIDOR
+
+Una vez generado el par de claves en la máquina local hay que copiar la clave pública al servidor remoto:
+user@localmachine$ scp ~/.ssh/id_rsa.pub user@remotemachine:/home/user/uploaded_key.pub
+
+La clave pública hay que incluirla en el archivo /home/user/.ssh/authorized_keys. Si la carpeta .ssh no existe, la creamos antes de copiar, así como el archivo authorized_keys:
+user@remotemachine$ echo `cat ~/uploaded_key.pub` >> ~/.ssh/authorized_keys
+user@remotemachine$ rm /home/user/uploaded_key.pub
+
+
+
