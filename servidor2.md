@@ -58,15 +58,19 @@ Usando un LiveCD, inicia gparted y cambia el tamaño de la partición del LVM
 
 En las siguientes imágenes se muestra la secuencia de pasos:
 
-![](imagenes/gparted1.png)
+![](imagenes/proxmox2-gparted1.png)
 
 (8GB Log ZFS + 32 GB Cache ZFS) = 40 * 1024 = 40960, por tanto encogeremos la partición 40960MB.
 
-![](imagenes/gparted2.png)
+![](imagenes/proxmox2-gparted2.png)
 
-![](imagenes/gparted3.png)
+![](imagenes/proxmox2-gparted3.png)
 
-![](imagenes/gparted4.png)
+![](imagenes/proxmox2-gparted4.png)
+
+![](imagenes/proxmox2-gparted5.png)
+
+![](imagenes/proxmox2-gparted6.png)
 
 ## 2. Configuramos la nueva instalación de Proxmox
 
@@ -109,7 +113,7 @@ Vamos a crear un RAID1 (mirror) con los dos discos de 2TB.
 
 ### 2.3. Iniciando el pool ZFS
 Ejecutamos la orden *lsblk* para ver los discos que tenemos conectados.
-![](imagenes/lsblk0.png)
+![](imagenes/proxmox2-inicializaPoolZFS.png)
 
 ####  2.3.1. Creando un nuevo pool ZFS
 Para este sistema , quiero un pool raid1  con una caché L2ARC y un Log ZIL.
@@ -120,7 +124,7 @@ Para crear el pool , ejecutaremos este comando :
 ```bash
    zpool create -f -o ashift=12 rpool mirror /dev/sda /dev/sdb cache /dev/sdc5 log /dev/sdc4
 ```
-![](imagenes/lsblk1.png)
+![](imagenes/proxmox2-poolZFS.png)
 
 Una vez hecho esto , puede ejecutar *zpool list* para verificar que el pool se ha creado. Ten en cuenta que el tamaño que se muestra aquí es el tamaño real total de los discos, no el espacio real utilizable.
 ```bash
@@ -192,7 +196,7 @@ Es una buena idea deshabilitarlo para no poner cosas accidentalmente ahí, para 
 
 Ahora, si expandimos el nodo de la izquierda, debería aparecer algo como esto:
 
-![](imagenes/server-view.png)
+![](imagenes/proxmox2-volumenes.png)
 
 Si aparecen todos los volúmenes que querías, es que lo has realizado correctamente. ¡Buen trabajo! Puedes hacer click en ellos para ver la información del uso de disco, configurar permisos y ver el contenido. También puedes subir contenido.
 
