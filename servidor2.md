@@ -220,17 +220,17 @@ Para evitar el mensaje de la suscripción en el interfaz web:
 Para poder añadir o sustituir discos al rpool:
 
 Autoexpandir:
-
+```
 zpool set autoexpand=on rpool
-
+```
 Reemplazar discos:
-
+```
 zpool set autoreplace=on rpool
-
+```
 para que las snapshots aparezcan al hacer zfs list
-
+```
 zpool set listsnapshots=on rpool
-
+```
 Activate Email notification
 to activate the daemon it is necessary to edit /etc/zfs/zed.d/zed.rc with your favored editor.
 
