@@ -1,7 +1,5 @@
 # Instalando proxmox 5.1
 
-Nota: este trabajo está basado en el artículo [https://forum.teksyndicate.com/t/proxmox-zfs-with-ssd-caching-setup-guide/97663]
-
 ###  Las características del servidor son:
 
 ALDA CECQ77F01071 (SE3)
@@ -10,7 +8,7 @@ ALDA CECQ77F01071 (SE3)
 * 32 GB RAM DDR3 @ 1600MHz
 * 2x 2TB Western Digital RED SATA
 * 1x 128GB SSD PCIE Plextor PX-AG128M6e Black edition
-* * 4x NIC Gigabit Ethernet
+* 4x NIC Gigabit Ethernet
 
 ## 1. Instalación de Proxmox
 Nota: Al instalar Proxmox, no se puede dejar la cantidad de espacio libre que queramos. Consecuentemente, en esta guía instalaremos el sistema base con unos LVM más pequeños de los necesarios y a continuación usaremos un LiveCD para encoger el tamaño de la partición del grupo de LVM
@@ -43,7 +41,7 @@ Hay cinco opciones para inicializar el almacenamiento durante la instalación de
     maxvz : Ésta es la partición pve-data al la que me refería arriba. 
     Filesystem : Déjalo en ext4 a menos que tengas una buena razón para no hacerlo.
 
-![](imagenes/instalacion1.png)
+![](imagenes/proxmox2-particiones.jpg)
 
 
 Una vez hecho lo anterior, configura una contraseña y una zona horaria, y después configura la red. Debes asignar una IP fija que no debs cambiar por un largo periodo de tiempo, es bastante enredoso cambiar la IP. El FQDN no tiene que ser un nombre real (existente) en internet. Si no sabes cual poner, *servidor1.localdomain* será suficiente.
