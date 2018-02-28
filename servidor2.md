@@ -120,9 +120,13 @@ Para este sistema , quiero un pool raid1  con una caché L2ARC y un Log ZIL.
 
 Sabemos de arriba que las 2 unidades mecánicas son sda y sdb. También sabemos que mi registro es sdc4 , y mi memoria caché es sdc5 . Al crear el pool ZFS , tenemos que añadir /dev/ al principio de cada nombre de dispositivo. En Linux, /dev es el directorio en representación de todos los dispositivos del sistema.
 
-Para crear el pool , ejecutaremos este comando :
+Para crear el pool, ejecutaremos este comando :
 ```bash
    zpool create -f -o ashift=12 rpool mirror /dev/sda /dev/sdb cache /dev/sdc5 log /dev/sdc4
+```
+Mejor utilizar la opción by-id:
+```
+zpool create -f -o ashift=12 rpool mirror /dev/disk/by-id/ata-WDC_WD20EFRX-68EUZN0_WD-WCC4M7SY53N4 /dev/disk/by-id/ata-WDC_WD20EFRX-68EUZN0_WD-WCC4M0SY1FU5 cache /dev/disk/by-id/ata-PLEXTOR_PX-AG128M6e_P02539107818-part5 log /dev/disk/by-id/ata-PLEXTOR_PX-AG128M6e_P02539107818-part4
 ```
 ![](imagenes/proxmox2-poolZFS.png)
 
