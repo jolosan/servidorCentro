@@ -124,11 +124,12 @@ Para crear el pool, ejecutaremos este comando :
 ```bash
    zpool create -f -o ashift=12 rpool mirror /dev/sda /dev/sdb cache /dev/sdc5 log /dev/sdc4
 ```
+![](imagenes/proxmox2-poolZFS.png)
 Mejor utilizar la opción by-id:
 ```
 zpool create -f -o ashift=12 rpool mirror /dev/disk/by-id/ata-WDC_WD20EFRX-68EUZN0_WD-WCC4M7SY53N4 /dev/disk/by-id/ata-WDC_WD20EFRX-68EUZN0_WD-WCC4M0SY1FU5 cache /dev/disk/by-id/ata-PLEXTOR_PX-AG128M6e_P02539107818-part5 log /dev/disk/by-id/ata-PLEXTOR_PX-AG128M6e_P02539107818-part4
 ```
-![](imagenes/proxmox2-poolZFS.png)
+![](imagenes/proxmox2-poolZFS-by-id.png)
 
 Una vez hecho esto , puede ejecutar *zpool list* para verificar que el pool se ha creado. Ten en cuenta que el tamaño que se muestra aquí es el tamaño real total de los discos, no el espacio real utilizable.
 ```bash
