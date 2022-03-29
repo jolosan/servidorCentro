@@ -4,16 +4,19 @@
 
 ALDA CECQ77F01071 (SE3)
 * Placa base Fujitsu
-* Intel I7-3370 @ 3400Hz
+* Intel XEON @ 3400Hz
 * 32 GB RAM DDR3 @ 1600MHz
-* 2x 2TB Western Digital RED SATA
-* 1x 128GB SSD PCIE Plextor PX-AG128M6e Black edition
-* 4x NIC Gigabit Ethernet
+* 2 x 2TB Western Digital RED SATA
+* 2 x 4TB Western Digital RED SATA
+* 1 x 256GB SATA SSD KINGSTON
+* 1 x 256GB nvme KINSTON KC2500
+* 1 x Integrated NIC Gigabit Ethernet
+* 4 x NIC Gigabit Ethernet
 
 ## 1. Instalación de Proxmox
 Nota: Al instalar Proxmox, no se puede dejar la cantidad de espacio libre que queramos. Consecuentemente, en esta guía instalaremos el sistema base con unos LVM más pequeños de los necesarios y a continuación usaremos un LiveCD para encoger el tamaño de la partición del grupo de LVM
 
-111GB Kingston SATA SSD - Sistema Base instalado en un partición ext4 + 8GB partición de log ZFS (ZIL) + 32GB partición caché ZFS (L2ARC)
+223GB Kingston SATA SSD - Sistema Base instalado en un partición ext4 + 8GB partición de log ZFS (ZIL) + 32GB partición caché ZFS (L2ARC)
 
         8GB  partición de Log.
         32GB partición caché ZFS.
@@ -37,7 +40,7 @@ Hay cinco opciones para inicializar el almacenamiento durante la instalación de
 
     swapsize : tamaño de la swap de Linux.
     maxroot : Este es el tamaño de la partición / (root).
-    minfree : Debería ser tu tamaño de log ZFS + cache ZFS. En mi disco SSD de 111GB, éste era 32+8=40.
+    minfree : Debería ser tu tamaño de log ZFS + cache ZFS. En mi disco SSD de 223GB, éste era 32+8=40 para cada pool ZFS.
     maxvz : Ésta es la partición pve-data al la que me refería arriba. 
     Filesystem : Déjalo en ext4 a menos que tengas una buena razón para no hacerlo.
 
@@ -60,7 +63,7 @@ En las siguientes imágenes se muestra la secuencia de pasos:
 
 ![](imagenes/proxmox2-gparted1.png)
 
-(8GB Log ZFS + 32 GB Cache ZFS) = 40 * 1024 = 40960, por tanto encogeremos la partición 40960MB.
+(8GB Log ZFS + 32 GB Cache ZFS) * 2 = 80 * 1024 = 81920, por tanto encogeremos la partición 81920MB.
 
 ![](imagenes/proxmox2-gparted2.png)
 
