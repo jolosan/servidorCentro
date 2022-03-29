@@ -1,0 +1,42 @@
+# Instalando proxmox 5.1
+
+###  Las características del servidor son:
+
+ALDA CECQ77F01071 (SE3)
+* Placa base Fujitsu
+* Intel I7-3370 @ 3400Hz
+* 32 GB RAM DDR3 @ 1600MHz
+* 2x 2TB Western Digital RED SATA
+* 1x 128GB SSD PCIE Plextor PX-AG128M6e Black edition
+* 4x NIC Gigabit Ethernet
+
+## 1. Instalación de Proxmox
+Nota: Al instalar Proxmox, no se puede dejar la cantidad de espacio libre que queramos. Consecuentemente, en esta guía instalaremos el sistema base con unos LVM más pequeños de los necesarios y a continuación usaremos un LiveCD para encoger el tamaño de la partición del grupo de LVM
+
+111GB Kingston SATA SSD - Sistema Base instalado en un partición ext4 + 8GB partición de log ZFS (ZIL) + 32GB partición caché ZFS (L2ARC)
+
+        8GB  partición de Log.
+        32GB partición caché ZFS.
+        32GB / partición root
+        16GB Partición Linux swap (ver nota debajo)
+        31GB partición pve-data 
+
+Este enfoque parece funcionar bastante bien, ¡pero asegurate de inicializar el valor de *vm.swappiness* a un valor bajo si tienes la partición de swap en un SSD! Incrementará el uso de la RAM un poco, pero es más facil tenerlo en el SSD y hace que la máquina vaya un poco más rápida. Normalmente el valor es 60, lo cual indica que cuando la RAM se llena al 60%, se empieza a paginar con el SSD. Podemos averiguar el valor actual con la orden:
+
+```bash
+    cat /proc/sys/vm/swappiness
+```
+
+Para cambiar el valor, debemos editar el fichero */etc/sysctl.conf* y añadir la línea:
+
+```bash
+    vm.swappiness = 10
+```
+
+Hay cinco opciones para inicializar el almacenamiento durante la instalación de Proxmox: 
+
+    swapsize : tamaño de la swap de Linux.
+    maxroot : Este es el tamaño de la partición / (root).
+    minfree : Debería ser tu tamaño de log ZFS + cache ZFS. En mi disco SSD de 111GB, éste era 32+8=40.
+    maxvz : Ésta es la partición pve-data al la que me refería arriba. 
+    Filesystem : Déjalo en ext4 a menos que tengas una buena razón para no hacerlo.
